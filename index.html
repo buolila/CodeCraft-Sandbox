@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نظام تقييم بالنقاط</title>
+  <title>نظام تقييم بالنقاط مع LocalStorage</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -23,14 +23,14 @@
       padding: 2rem;
       text-align: center;
       box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-      width: 300px;
+      width: 320px;
     }
 
     .score-display {
-      font-size: 3rem;
+      font-size: 3.5rem;
       font-weight: bold;
       color: #58a6ff;
-      margin: 1rem 0;
+      margin: 0.8rem 0;
     }
 
     .btn-group {
@@ -46,7 +46,7 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      transition: all 0.2s ease;
     }
 
     button:active {
@@ -60,13 +60,19 @@
 
     .btn-add.active {
       background-color: #2ea043;
-      box-shadow: 0 0 10px #2ea043;
+      box-shadow: 0 0 12px rgba(46, 160, 67, 0.6);
     }
 
     .btn-reset {
       background-color: #21262d;
       color: #8b949e;
       border: 1px solid #30363d;
+    }
+
+    .status-tag {
+      font-size: 0.8rem;
+      color: #8b949e;
+      margin-top: 1rem;
     }
   </style>
 </head>
@@ -78,41 +84,60 @@
 
     <div class="btn-group">
       <button id="markBtn" class="btn-add" onclick="toggleScore()">إضافة درجة</button>
-      <button class="btn-reset" onclick="resetScore()">إلغاء</button>
+      <button class="btn-reset" onclick="resetScore()">إلغاء وتصفير</button>
     </div>
+
+    <div class="status-tag">تُحفظ البيانات تلقائياً في المتصفح</div>
   </div>
 
   <script>
-    let score = 0;
-    let isMarked = false;
+    // 1. استرجاع البيانات المخزنة مسبقاً أو تعيين قيم افتراضية
+    let score = parseInt(localStorage.getItem('savedScore')) || 0;
+    let isMarked = localStorage.getItem('savedIsMarked') === 'true';
 
     const scoreDisplay = document.getElementById('score');
     const markBtn = document.getElementById('markBtn');
 
-    // دالة عند الضغط على الزر الرئيسي
-    function toggleScore() {
-      if (!isMarked) {
-        score += 1; // زيادة درجة
-        isMarked = true;
+    // 2. دالة لتحديث الواجهة وحفظ البيانات في LocalStorage
+    function updateUIAndSave() {
+      scoreDisplay.textContent = score;
+
+      if (isMarked) {
         markBtn.textContent = 'تم التعليم (1+)';
         markBtn.classList.add('active');
       } else {
-        score -= 1; // إلغاء الدرجة عند الضغط مرة أخرى
-        isMarked = false;
         markBtn.textContent = 'إضافة درجة';
         markBtn.classList.remove('active');
       }
-      scoreDisplay.textContent = score;
+
+      // حفظ القيم في LocalStorage
+      localStorage.setItem('savedScore', score);
+      localStorage.setItem('savedIsMarked', isMarked);
     }
 
-    // دالة التصفير
+    // 3. إضافة/إلغاء الدرجة
+    function toggleScore() {
+      if (!isMarked) {
+        score += 1;
+        isMarked = true;
+      } else {
+        score -= 1;
+        isMarked = false;
+      }
+      updateUIAndSave();
+    }
+
+    // 4. تصفير البيانات ومسحها من LocalStorage
     function resetScore() {
       score = 0;
       isMarked = false;
-      scoreDisplay.textContent = score;
-      markBtn.textContent = 'إضافة درجة';
-      markBtn.classList.remove('active');
+      localStorage.removeItem('savedScore');
+      localStorage.removeItem('savedIsMarked');
+      updateUIAndSave();
     }
+
+    // تشغيل التحديث فور فتح الصفحة لعرض البيانات المحفوظة
+    updateUIAndSave();
   </script>
 
 </body>
