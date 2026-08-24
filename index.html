@@ -302,7 +302,7 @@
 
   <section class="hero">
     <h1>ابنِ أفكارك واختبر درجتك</h1>
-    <p>اكتب كود HTML & CSS واضغط على زر التصحيح للتقييم الفوري والحصول على درجتك.</p>
+    <p>اكتب كود HTML & CSS واضغط على زر التصحيح للتقييم الفوري والحصول على درجتك من 100 إلى 0.</p>
   </section>
 
   <!-- شريط التصحيح والتقييم -->
@@ -310,7 +310,7 @@
     <button class="btn-grade" onclick="evaluateCode()">تصحيح وتقييم الكود 🎯</button>
     <div class="score-box">
       <span class="feedback-text" id="feedbackText">اضغط "تصحيح" للتقييم</span>
-      <div class="score-badge" id="scoreDisplay">0 / 100</div>
+      <div class="score-badge" id="scoreDisplay">100 / 100</div>
     </div>
   </div>
 
@@ -385,7 +385,7 @@
     const feedbackText = document.getElementById('feedbackText');
     const maxLines = 50;
 
-    // استرجاع الدرجة المحفوظة سابقتً من LocalStorage
+    // استرجاع الدرجة المحفوظة سابقاً من LocalStorage
     const savedScore = localStorage.getItem('codeCraftScore');
     const savedFeedback = localStorage.getItem('codeCraftFeedback');
     if (savedScore !== null) {
@@ -419,38 +419,45 @@
       }
     }
 
-    // دالة تصحيح الكود وحساب الدرجة
+    // دالة التصحيح بنظام الخصم من 100 إلى 0
     function evaluateCode() {
       const code = codeEditor.value.trim();
       const lines = code.split('\n').length;
-      let score = 0;
-      let feedback = [];
+      let score = 100; // البداية بـ 100
+      let deductions = [];
 
       if (code.length === 0) {
+        score = 0;
         scoreDisplay.textContent = "0 / 100";
-        feedbackText.textContent = "الكود فارغ! اكتب كود للتقييم.";
+        feedbackText.textContent = "الكود فارغ! تم خصم 100 نقطة.";
+        localStorage.setItem('codeCraftScore', 0);
+        localStorage.setItem('codeCraftFeedback', "الكود فارغ!");
         return;
       }
 
-      // 1. فحص الالتزام بحد الأسطر (30 درجة)
-      if (lines <= maxLines) {
-        score += 30;
-      } else {
-        feedback.push("تجاوزت حد 50 سطرًا (-30)");
+      // 1. خصم نقطتين عن كل سطر زائد عن الـ 50 سطرًا
+      if (lines > maxLines) {
+        const extraLines = lines - maxLines;
+        const penalty = extraLines * 2;
+        score -= penalty;
+        deductions.push(`تجاوز الأسطر (${extraLines} أسطر زوائد = -${penalty})`);
       }
 
-      // 2. فحص وجود عناصر HTML أساسية (35 درجة)
-      if (/<(div|h1|h2|h3|p|button|span|section)/i.test(code)) {
-        score += 35;
-      } else {
-        feedback.push("ينقصك عناصر HTML أساسية");
+      // 2. خصم 40 نقطة إذا لم توجد وسوم HTML هيكلية
+      if (!/<(div|h1|h2|h3|p|button|span|section|header|footer)/i.test(code)) {
+        score -= 40;
+        deductions.push("غياب عناصر HTML الهيكلية (-40)");
       }
 
-      // 3. فحص التنسيقات CSS (35 درجة)
-      if (/<style/i.test(code) || /style=/i.test(code)) {
-        score += 35;
-      } else {
-        feedback.push("أضف تنسيقات CSS لرفع الدرجة");
+      // 3. خصم 30 نقطة إذا لم توجد تنسيقات CSS
+      if (!/<style/i.test(code) && !/style=/i.test(code)) {
+        score -= 30;
+        deductions.push("غياب تنسيقات CSS (-30)");
+      }
+
+      // ضمان عدم هبوط الدرجة تحت 0
+      if (score < 0) {
+        score = 0;
       }
 
       // عرض الدرجة والملاحظات
@@ -458,9 +465,9 @@
       
       let finalFeedback = "";
       if (score === 100) {
-        finalFeedback = "ممتاز! كود كامل ومنظم ومطابق للتحدي 🔥";
+        finalFeedback = "ممتاز! حصلت على العلامة الكاملة (100/100) 🎯";
       } else {
-        finalFeedback = "ملاحظات: " + feedback.join(' | ');
+        finalFeedback = "الخصومات: " + deductions.join(' | ');
       }
       
       feedbackText.textContent = finalFeedback;
