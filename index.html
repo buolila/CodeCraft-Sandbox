@@ -3,141 +3,480 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نظام تقييم بالنقاط مع LocalStorage</title>
+  <title>CodeCraft Sandbox | محرر الكود التفاعلي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0d1117;
-      color: #ffffff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    :root {
+      --bg-gradient: radial-gradient(circle at 50% -20%, #1e293b, #0f172a 80%);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-color: #10b981;
+      --accent-glow: rgba(16, 185, 129, 0.25);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --code-color: #38bdf8;
+      --danger-color: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+      font-family: 'Cairo', sans-serif;
     }
 
-    .card {
-      background-color: #161b22;
-      border: 1px solid #30363d;
-      border-radius: 12px;
-      padding: 2rem;
-      text-align: center;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-      width: 320px;
-    }
-
-    .score-display {
-      font-size: 3.5rem;
-      font-weight: bold;
-      color: #58a6ff;
-      margin: 0.8rem 0;
-    }
-
-    .btn-group {
+    body {
+      background: #0b0f19;
+      background-image: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
       display: flex;
-      gap: 10px;
-      justify-content: center;
+      flex-direction: column;
+      overflow-x: hidden;
     }
 
-    button {
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      font-weight: bold;
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 8%;
+      backdrop-filter: blur(12px);
+      background: rgba(11, 15, 25, 0.6);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo span {
+      color: var(--accent-color);
+      font-family: 'Fira Code', monospace;
+    }
+
+    .badge {
+      background: var(--accent-glow);
+      color: var(--accent-color);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem 1.5rem;
+      max-width: 750px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    /* Action Controls & Score Bar */
+    .controls-bar {
+      max-width: 1300px;
+      width: 92%;
+      margin: 0.5rem auto 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      background: var(--card-bg);
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-grade {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #fff;
       border: none;
-      border-radius: 6px;
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
       cursor: pointer;
       transition: all 0.2s ease;
+      box-shadow: 0 4px 15px var(--accent-glow);
     }
 
-    button:active {
-      transform: scale(0.95);
+    .btn-grade:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
     }
 
-    .btn-add {
-      background-color: #238636;
-      color: white;
+    .btn-grade:active {
+      transform: translateY(0);
     }
 
-    .btn-add.active {
-      background-color: #2ea043;
-      box-shadow: 0 0 12px rgba(46, 160, 67, 0.6);
+    .score-box {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
 
-    .btn-reset {
-      background-color: #21262d;
-      color: #8b949e;
-      border: 1px solid #30363d;
+    .score-badge {
+      font-family: 'Fira Code', monospace;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--accent-color);
+      background: rgba(16, 185, 129, 0.15);
+      padding: 0.3rem 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
     }
 
-    .status-tag {
+    .feedback-text {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Editor Container */
+    .editor-container {
+      max-width: 1300px;
+      width: 92%;
+      margin: 0 auto 3rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      flex: 1;
+    }
+
+    @media (max-width: 900px) {
+      .editor-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Windows Panels */
+    .panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      height: 500px;
+      overflow: hidden;
+      transition: border-color 0.3s ease;
+    }
+
+    .panel:focus-within {
+      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: 0 0 25px var(--accent-glow);
+    }
+
+    .panel-header {
+      background: rgba(15, 23, 42, 0.8);
+      padding: 0.75rem 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .line-counter {
+      font-family: 'Fira Code', monospace;
       font-size: 0.8rem;
-      color: #8b949e;
-      margin-top: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      color: var(--accent-color);
+    }
+
+    .line-counter.limit {
+      color: var(--danger-color);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    /* Editor Layout */
+    .editor-wrapper {
+      display: flex;
+      flex: 1;
+      position: relative;
+      background: #090d16;
+    }
+
+    .line-numbers {
+      padding: 1rem 0.5rem;
+      background: rgba(0, 0, 0, 0.2);
+      color: #475569;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      text-align: center;
+      user-select: none;
+      line-height: 1.6;
+      min-width: 40px;
+      border-left: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    textarea {
+      flex: 1;
+      height: 100%;
+      background: transparent;
+      color: var(--code-color);
+      border: none;
+      padding: 1rem;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      resize: none;
+      outline: none;
+      direction: ltr;
+      text-align: left;
+      tab-size: 2;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #ffffff;
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      border-top: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      background: rgba(11, 15, 25, 0.8);
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <h2>تقييم المستخدم</h2>
-    <div id="score" class="score-display">0</div>
+  <header>
+    <div class="logo"><span>&lt;/&gt;</span> CodeCraft</div>
+    <div class="badge">تحدي الـ 50 سطرًا</div>
+  </header>
 
-    <div class="btn-group">
-      <button id="markBtn" class="btn-add" onclick="toggleScore()">إضافة درجة</button>
-      <button class="btn-reset" onclick="resetScore()">إلغاء وتصفير</button>
+  <section class="hero">
+    <h1>ابنِ أفكارك واختبر درجتك</h1>
+    <p>اكتب كود HTML & CSS واضغط على زر التصحيح للتقييم الفوري والحصول على درجتك.</p>
+  </section>
+
+  <!-- شريط التصحيح والتقييم -->
+  <div class="controls-bar">
+    <button class="btn-grade" onclick="evaluateCode()">تصحيح وتقييم الكود 🎯</button>
+    <div class="score-box">
+      <span class="feedback-text" id="feedbackText">اضغط "تصحيح" للتقييم</span>
+      <div class="score-badge" id="scoreDisplay">0 / 100</div>
     </div>
-
-    <div class="status-tag">تُحفظ البيانات تلقائياً في المتصفح</div>
   </div>
 
+  <main class="editor-container">
+    <!-- نافذة كتابة الكود -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="window-dots">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </div>
+        <span>محرر الكود (index.html)</span>
+        <span id="lineCount" class="line-counter">0 / 50</span>
+      </div>
+      <div class="editor-wrapper">
+        <div id="lineNumbers" class="line-numbers">1</div>
+        <textarea id="codeEditor" spellcheck="false"><style>
+  body {
+    background: #0f172a;
+    color: #fff;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .card {
+    background: #1e293b;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    text-align: center;
+    border: 1px solid #334155;
+  }
+  h2 { color: #10b981; margin-bottom: 0.5rem; }
+</style>
+
+<div class="card">
+  <h2>CodeCraft Sandbox</h2>
+  <p>عدّل الكود لتشاهد النتيجة مباشرة 🚀</p>
+</div></textarea>
+      </div>
+    </div>
+
+    <!-- نافذة العرض المباشر -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="window-dots">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </div>
+        <span>النتيجة الحية (Live View)</span>
+        <span style="font-size:0.75rem; color:#64748b;">تحديث تلقائي</span>
+      </div>
+      <iframe id="preview"></iframe>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2026 CodeCraft Sandbox - جميع الحقوق محفوظة
+  </footer>
+
   <script>
-    // 1. استرجاع البيانات المخزنة مسبقاً أو تعيين قيم افتراضية
-    let score = parseInt(localStorage.getItem('savedScore')) || 0;
-    let isMarked = localStorage.getItem('savedIsMarked') === 'true';
+    const codeEditor = document.getElementById('codeEditor');
+    const preview = document.getElementById('preview');
+    const lineCount = document.getElementById('lineCount');
+    const lineNumbers = document.getElementById('lineNumbers');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const feedbackText = document.getElementById('feedbackText');
+    const maxLines = 50;
 
-    const scoreDisplay = document.getElementById('score');
-    const markBtn = document.getElementById('markBtn');
+    // استرجاع الدرجة المحفوظة سابقتً من LocalStorage
+    const savedScore = localStorage.getItem('codeCraftScore');
+    const savedFeedback = localStorage.getItem('codeCraftFeedback');
+    if (savedScore !== null) {
+      scoreDisplay.textContent = `${savedScore} / 100`;
+      feedbackText.textContent = savedFeedback || '';
+    }
 
-    // 2. دالة لتحديث الواجهة وحفظ البيانات في LocalStorage
-    function updateUIAndSave() {
-      scoreDisplay.textContent = score;
+    function updateEditor() {
+      const code = codeEditor.value;
+      
+      // تحديث العرض في الـ iframe
+      const previewDoc = preview.contentDocument || preview.contentWindow.document;
+      previewDoc.open();
+      previewDoc.write(code);
+      previewDoc.close();
 
-      if (isMarked) {
-        markBtn.textContent = 'تم التعليم (1+)';
-        markBtn.classList.add('active');
+      // حساب وتحديث الأسطر
+      const lines = code.split('\n');
+      const totalLines = lines.length;
+
+      // تحديث شريط أرقام الأسطر
+      lineNumbers.innerHTML = Array.from({ length: totalLines }, (_, i) => i + 1).join('<br>');
+
+      // تحديث عداد الأسطر
+      lineCount.textContent = `${totalLines} / ${maxLines}`;
+
+      if (totalLines > maxLines) {
+        lineCount.classList.add('limit');
       } else {
-        markBtn.textContent = 'إضافة درجة';
-        markBtn.classList.remove('active');
+        lineCount.classList.remove('limit');
+      }
+    }
+
+    // دالة تصحيح الكود وحساب الدرجة
+    function evaluateCode() {
+      const code = codeEditor.value.trim();
+      const lines = code.split('\n').length;
+      let score = 0;
+      let feedback = [];
+
+      if (code.length === 0) {
+        scoreDisplay.textContent = "0 / 100";
+        feedbackText.textContent = "الكود فارغ! اكتب كود للتقييم.";
+        return;
       }
 
-      // حفظ القيم في LocalStorage
-      localStorage.setItem('savedScore', score);
-      localStorage.setItem('savedIsMarked', isMarked);
-    }
-
-    // 3. إضافة/إلغاء الدرجة
-    function toggleScore() {
-      if (!isMarked) {
-        score += 1;
-        isMarked = true;
+      // 1. فحص الالتزام بحد الأسطر (30 درجة)
+      if (lines <= maxLines) {
+        score += 30;
       } else {
-        score -= 1;
-        isMarked = false;
+        feedback.push("تجاوزت حد 50 سطرًا (-30)");
       }
-      updateUIAndSave();
+
+      // 2. فحص وجود عناصر HTML أساسية (35 درجة)
+      if (/<(div|h1|h2|h3|p|button|span|section)/i.test(code)) {
+        score += 35;
+      } else {
+        feedback.push("ينقصك عناصر HTML أساسية");
+      }
+
+      // 3. فحص التنسيقات CSS (35 درجة)
+      if (/<style/i.test(code) || /style=/i.test(code)) {
+        score += 35;
+      } else {
+        feedback.push("أضف تنسيقات CSS لرفع الدرجة");
+      }
+
+      // عرض الدرجة والملاحظات
+      scoreDisplay.textContent = `${score} / 100`;
+      
+      let finalFeedback = "";
+      if (score === 100) {
+        finalFeedback = "ممتاز! كود كامل ومنظم ومطابق للتحدي 🔥";
+      } else {
+        finalFeedback = "ملاحظات: " + feedback.join(' | ');
+      }
+      
+      feedbackText.textContent = finalFeedback;
+
+      // حفظ الدرجة في LocalStorage
+      localStorage.setItem('codeCraftScore', score);
+      localStorage.setItem('codeCraftFeedback', finalFeedback);
     }
 
-    // 4. تصفير البيانات ومسحها من LocalStorage
-    function resetScore() {
-      score = 0;
-      isMarked = false;
-      localStorage.removeItem('savedScore');
-      localStorage.removeItem('savedIsMarked');
-      updateUIAndSave();
-    }
+    // مزامنة التمرير (Scroll) بين الأرقام والنص
+    codeEditor.addEventListener('scroll', () => {
+      lineNumbers.scrollTop = codeEditor.scrollTop;
+    });
 
-    // تشغيل التحديث فور فتح الصفحة لعرض البيانات المحفوظة
-    updateUIAndSave();
+    codeEditor.addEventListener('input', updateEditor);
+    updateEditor();
   </script>
 
 </body>
