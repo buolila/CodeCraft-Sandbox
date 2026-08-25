@@ -50,6 +50,12 @@
     z-index: 100;
   }
 
+  .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
   .logo {
     font-size: 1.4rem;
     font-weight: 800;
@@ -73,6 +79,29 @@
     border-radius: 20px;
     font-size: 0.85rem;
     font-weight: 700;
+  }
+
+  .ui-lang-select {
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .ui-lang-select:hover {
+    border-color: var(--accent-color);
+  }
+
+  .ui-lang-select option {
+    background: #0f172a;
+    color: var(--text-main);
   }
 
   /* Hero */
@@ -319,19 +348,27 @@
 
 <header>
   <div class="logo"><span>&lt;/&gt;</span> CodeCraft</div>
-  <div class="badge">تحدي الـ 50 سطرًا</div>
+  <div class="header-controls">
+    <select id="uiLangSelect" class="ui-lang-select" onchange="changeUILanguage(this.value)">
+      <option value="ar" selected>العربية</option>
+      <option value="en">English</option>
+      <option value="es">Español</option>
+      <option value="fr">Français</option>
+    </select>
+    <div class="badge" id="txtBadge">تحدي الـ 50 سطرًا</div>
+  </div>
 </header>
 
 <section class="hero">
-  <h1>ابنِ أفكارك واختبر درجتك</h1>
-  <p>اختر لغة البرمجة من القائمة، اكتب كودك، شغّله مباشرة (للغات الويب)، واضغط "تصحيح" للحصول على درجتك من 100 إلى 0.</p>
+  <h1 id="txtHeroTitle">ابنِ أفكارك واختبر درجتك</h1>
+  <p id="txtHeroDesc">اختر لغة البرمجة من القائمة، اكتب كودك، شغّله مباشرة (للغات الويب)، واضغط "تصحيح" للحصول على درجتك من 100 إلى 0.</p>
 </section>
 
 <div class="controls-bar">
   <div class="btn-group">
-    <button class="btn btn-run" onclick="runCode()">تشغيل الكود ▶</button>
-    <button class="btn btn-grade" onclick="evaluateCode()">تصحيح وتقييم 🎯</button>
-    <button class="btn btn-reset" onclick="resetCode()">إعادة تعيين ↺</button>
+    <button class="btn btn-run" id="btnRun" onclick="runCode()">تشغيل الكود ▶</button>
+    <button class="btn btn-grade" id="btnGrade" onclick="evaluateCode()">تصحيح وتقييم 🎯</button>
+    <button class="btn btn-reset" id="btnReset" onclick="resetCode()">إعادة تعيين ↺</button>
   </div>
   <div class="score-box">
     <span class="feedback-text" id="feedbackText">اضغط "تصحيح" للتقييم</span>
@@ -348,7 +385,7 @@
         <span class="dot dot-green"></span>
       </div>
       <div class="header-title">
-        <span>محرر الكود</span>
+        <span id="txtEditorHeader">محرر الكود</span>
         <select id="langSelect" class="lang-select">
           <optgroup label="لغات الويب">
             <option value="html" selected>HTML</option>
@@ -441,15 +478,15 @@
         <span class="dot dot-yellow"></span>
         <span class="dot dot-green"></span>
       </div>
-      <span>النتيجة الحية (Live View)</span>
-      <span style="font-size:0.75rem; color:#64748b;">تحديث تلقائي</span>
+      <span id="txtLiveView">النتيجة الحية (Live View)</span>
+      <span id="txtAutoUpdate" style="font-size:0.75rem; color:#64748b;">تحديث تلقائي</span>
     </div>
     <iframe id="preview"></iframe>
   </div>
 </main>
 
 <footer>
-  &copy; 2026 CodeCraft Sandbox - جميع الحقوق محفوظة
+  &copy; 2026 CodeCraft Sandbox - <span id="txtFooter">جميع الحقوق محفوظة</span>
 </footer>
 
 <script>
@@ -461,7 +498,110 @@
   const feedbackText = document.getElementById('feedbackText');
   const maxLines = 50;
 
-  // القيمة الافتراضية (تُستخدم عند إعادة التعيين، بلا أي تخزين محلي)
+  const translations = {
+    ar: {
+      dir: 'rtl',
+      badge: 'تحدي الـ 50 سطرًا',
+      heroTitle: 'ابنِ أفكارك واختبر درجتك',
+      heroDesc: 'اختر لغة البرمجة من القائمة، اكتب كودك، شغّله مباشرة (للغات الويب)، واضغط "تصحيح" للحصول على درجتك من 100 إلى 0.',
+      btnRun: 'تشغيل الكود ▶',
+      btnGrade: 'تصحيح وتقييم 🎯',
+      btnReset: 'إعادة تعيين ↺',
+      editorHeader: 'محرر الكود',
+      liveView: 'النتيجة الحية (Live View)',
+      autoUpdate: 'تحديث تلقائي',
+      footer: 'جميع الحقوق محفوظة',
+      initialFeedback: 'اضغط "تصحيح" للتقييم',
+      emptyCode: 'الكود فارغ! تم خصم 100 نقطة.',
+      perfectScore: 'ممتاز! حصلت على العلامة الكاملة (100/100) 🎯',
+      deductionsLabel: 'الخصومات: ',
+      extraLines: 'تجاوز الأسطر',
+      noHtml: 'غياب عناصر HTML الهيكلية (-40)',
+      noCss: 'غياب تنسيقات CSS (-30)'
+    },
+    en: {
+      dir: 'ltr',
+      badge: '50-Line Challenge',
+      heroTitle: 'Build Ideas & Test Your Score',
+      heroDesc: 'Choose a programming language, write your code, run it live (for web languages), and click "Grade" to get your score out of 100.',
+      btnRun: 'Run Code ▶',
+      btnGrade: 'Grade & Evaluate 🎯',
+      btnReset: 'Reset ↺',
+      editorHeader: 'Code Editor',
+      liveView: 'Live View',
+      autoUpdate: 'Auto Update',
+      footer: 'All rights reserved',
+      initialFeedback: 'Click "Grade" to evaluate',
+      emptyCode: 'Code is empty! 100 points deducted.',
+      perfectScore: 'Excellent! Perfect score (100/100) 🎯',
+      deductionsLabel: 'Deductions: ',
+      extraLines: 'Extra lines',
+      noHtml: 'Missing HTML structural elements (-40)',
+      noCss: 'Missing CSS styles (-30)'
+    },
+    es: {
+      dir: 'ltr',
+      badge: 'Desafío de 50 Líneas',
+      heroTitle: 'Construye Ideas y Evalúa tu Puntaje',
+      heroDesc: 'Elige un lenguaje de programación, escribe tu código, ejecútalo en vivo y haz clic en "Evaluar" para obtener tu nota sobre 100.',
+      btnRun: 'Ejecutar Código ▶',
+      btnGrade: 'Evaluar 🎯',
+      btnReset: 'Reiniciar ↺',
+      editorHeader: 'Editor de Código',
+      liveView: 'Vista en Vivo',
+      autoUpdate: 'Actualización automática',
+      footer: 'Todos los derechos reservados',
+      initialFeedback: 'Haz clic en "Evaluar" para obtener nota',
+      emptyCode: '¡El código está vacío! 100 puntos deducidos.',
+      perfectScore: '¡Excelente! Puntaje perfecto (100/100) 🎯',
+      deductionsLabel: 'Deducciones: ',
+      extraLines: 'Líneas extras',
+      noHtml: 'Faltan elementos estructurales HTML (-40)',
+      noCss: 'Faltan estilos CSS (-30)'
+    },
+    fr: {
+      dir: 'ltr',
+      badge: 'Défi des 50 lignes',
+      heroTitle: 'Créez vos idées et testez votre score',
+      heroDesc: 'Choisissez un langage, écrivez votre code, exécutez-le en direct et cliquez sur "Évaluer" pour obtenir votre score sur 100.',
+      btnRun: 'Exécuter ▶',
+      btnGrade: 'Évaluer 🎯',
+      btnReset: 'Réinitialiser ↺',
+      editorHeader: 'Éditeur de code',
+      liveView: 'Aperçu en direct',
+      autoUpdate: 'Mise à jour auto',
+      footer: 'Tous droits réservés',
+      initialFeedback: 'Cliquez sur "Évaluer" pour votre score',
+      emptyCode: 'Le code est vide ! 100 points déduits.',
+      perfectScore: 'Excellent ! Score parfait (100/100) 🎯',
+      deductionsLabel: 'Déductions : ',
+      extraLines: 'Lignes supplémentaires',
+      noHtml: 'Éléments HTML structurels manquants (-40)',
+      noCss: 'Styles CSS manquants (-30)'
+    }
+  };
+
+  let currentLang = 'ar';
+
+  function changeUILanguage(langKey) {
+    currentLang = langKey;
+    const t = translations[langKey];
+    document.documentElement.dir = t.dir;
+    document.documentElement.lang = langKey;
+
+    document.getElementById('txtBadge').textContent = t.badge;
+    document.getElementById('txtHeroTitle').textContent = t.heroTitle;
+    document.getElementById('txtHeroDesc').textContent = t.heroDesc;
+    document.getElementById('btnRun').textContent = t.btnRun;
+    document.getElementById('btnGrade').textContent = t.btnGrade;
+    document.getElementById('btnReset').textContent = t.btnReset;
+    document.getElementById('txtEditorHeader').textContent = t.editorHeader;
+    document.getElementById('txtLiveView').textContent = t.liveView;
+    document.getElementById('txtAutoUpdate').textContent = t.autoUpdate;
+    document.getElementById('txtFooter').textContent = t.footer;
+    feedbackText.textContent = t.initialFeedback;
+  }
+
   const defaultCode = codeEditor.value;
 
   function updateLineNumbers() {
@@ -482,54 +622,50 @@
     codeEditor.value = defaultCode;
     updateLineNumbers();
     scoreDisplay.textContent = '— / 100';
-    feedbackText.textContent = 'اضغط "تصحيح" للتقييم';
+    feedbackText.textContent = translations[currentLang].initialFeedback;
     runCode();
   }
 
   function evaluateCode() {
+    const t = translations[currentLang];
     const code = codeEditor.value.trim();
     const totalLines = codeEditor.value.split('\n').length;
 
     if (code.length === 0) {
       scoreDisplay.textContent = '0 / 100';
-      feedbackText.textContent = 'الكود فارغ! تم خصم 100 نقطة.';
+      feedbackText.textContent = t.emptyCode;
       return;
     }
 
     let score = 100;
     let deductions = [];
 
-    // 1) خصم نقطتين عن كل سطر زائد عن الحد الأقصى
     if (totalLines > maxLines) {
       const extraLines = totalLines - maxLines;
       const penalty = extraLines * 2;
       score -= penalty;
-      deductions.push(`تجاوز الأسطر (${extraLines} سطرًا زائدًا = -${penalty})`);
+      deductions.push(`${t.extraLines} (${extraLines} = -${penalty})`);
     }
 
-    // 2) خصم 40 نقطة إذا لم توجد وسوم HTML هيكلية
     if (!/<(div|h1|h2|h3|p|button|span|section|header|footer)/i.test(code)) {
       score -= 40;
-      deductions.push('غياب عناصر HTML الهيكلية (-40)');
+      deductions.push(t.noHtml);
     }
 
-    // 3) خصم 30 نقطة إذا لم توجد تنسيقات CSS
     if (!/<style/i.test(code) && !/style=/i.test(code)) {
       score -= 30;
-      deductions.push('غياب تنسيقات CSS (-30)');
+      deductions.push(t.noCss);
     }
 
     if (score < 0) score = 0;
 
     scoreDisplay.textContent = `${score} / 100`;
 
-    let finalFeedback;
     if (score === 100) {
-      finalFeedback = 'ممتاز! حصلت على العلامة الكاملة (100/100) 🎯';
+      feedbackText.textContent = t.perfectScore;
     } else {
-      finalFeedback = 'الخصومات: ' + deductions.join(' | ');
+      feedbackText.textContent = t.deductionsLabel + deductions.join(' | ');
     }
-    feedbackText.textContent = finalFeedback;
   }
 
   codeEditor.addEventListener('scroll', () => {
