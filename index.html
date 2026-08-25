@@ -101,8 +101,8 @@
 
     /* Action Controls & Score Bar */
     .controls-bar {
-      max-width: 1300px;
-      width: 92%;
+      max-width: 1500px;
+      width: 95%;
       margin: 0.5rem auto 1rem;
       display: flex;
       justify-content: space-between;
@@ -161,8 +161,8 @@
 
     /* Editor Container */
     .editor-container {
-      max-width: 1300px;
-      width: 92%;
+      max-width: 1500px;
+      width: 95%;
       margin: 0 auto 3rem;
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -176,7 +176,7 @@
       }
     }
 
-    /* Windows Panels */
+    /* Windows Panels - تم التكبير إلى 650px */
     .panel {
       background: var(--card-bg);
       backdrop-filter: blur(16px);
@@ -185,7 +185,7 @@
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
       display: flex;
       flex-direction: column;
-      height: 500px;
+      height: 650px;
       overflow: hidden;
       transition: border-color 0.3s ease;
     }
@@ -357,7 +357,7 @@
       </div>
     </div>
 
-    <!-- نافذة العرض المباشر -->
+    <!-- نافذة العرض المباشر (التي تم تكبيرها) -->
     <div class="panel">
       <div class="panel-header">
         <div class="window-dots">
@@ -423,7 +423,7 @@
     function evaluateCode() {
       const code = codeEditor.value.trim();
       const lines = code.split('\n').length;
-      let score = 100; // البداية بـ 100
+      let score = 100;
       let deductions = [];
 
       if (code.length === 0) {
@@ -455,12 +455,10 @@
         deductions.push("غياب تنسيقات CSS (-30)");
       }
 
-      // ضمان عدم هبوط الدرجة تحت 0
       if (score < 0) {
         score = 0;
       }
 
-      // عرض الدرجة والملاحظات
       scoreDisplay.textContent = `${score} / 100`;
       
       let finalFeedback = "";
@@ -472,12 +470,11 @@
       
       feedbackText.textContent = finalFeedback;
 
-      // حفظ الدرجة في LocalStorage
       localStorage.setItem('codeCraftScore', score);
       localStorage.setItem('codeCraftFeedback', finalFeedback);
     }
 
-    // مزامنة التمرير (Scroll) بين الأرقام والنص
+    // مزامنة التمرير
     codeEditor.addEventListener('scroll', () => {
       lineNumbers.scrollTop = codeEditor.scrollTop;
     });
