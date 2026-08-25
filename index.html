@@ -1,487 +1,548 @@
-<!DOCTYPE html>
+تما م حط كل لغات عربيه  وانجليزيه وكل اللغات<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CodeCraft Sandbox | محرر الكود التفاعلي</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-gradient: radial-gradient(circle at 50% -20%, #1e293b, #0f172a 80%);
-      --card-bg: rgba(30, 41, 59, 0.7);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --accent-color: #10b981;
-      --accent-glow: rgba(16, 185, 129, 0.25);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --code-color: #38bdf8;
-      --danger-color: #ef4444;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeCraft Sandbox | محرر الكود التفاعلي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-gradient: radial-gradient(circle at 50% -20%, #1e293b, #0f172a 80%);
+    --card-bg: rgba(30, 41, 59, 0.65);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --accent-color: #10b981;
+    --accent-color-2: #38bdf8;
+    --accent-glow: rgba(16, 185, 129, 0.25);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --code-color: #e2e8f0;
+    --danger-color: #ef4444;
+    --warn-color: #f59e0b;
+  }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Cairo', sans-serif;
-    }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
 
-    body {
-      background: #0b0f19;
-      background-image: var(--bg-gradient);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-    }
+  html, body { height: 100%; }
 
-    /* Header */
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.2rem 8%;
-      backdrop-filter: blur(12px);
-      background: rgba(11, 15, 25, 0.6);
-      border-bottom: 1px solid var(--card-border);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+  body {
+    background: #0b0f19;
+    background-image: var(--bg-gradient);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
 
-    .logo {
-      font-size: 1.4rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
+  /* Header */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 6%;
+    backdrop-filter: blur(12px);
+    background: rgba(11, 15, 25, 0.6);
+    border-bottom: 1px solid var(--card-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
 
-    .logo span {
-      color: var(--accent-color);
-      font-family: 'Fira Code', monospace;
-    }
+  .logo {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
-    .badge {
-      background: var(--accent-glow);
-      color: var(--accent-color);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
+  .logo span {
+    color: var(--accent-color);
+    font-family: 'Fira Code', monospace;
+  }
 
-    /* Hero Section */
-    .hero {
-      text-align: center;
-      padding: 3rem 1rem 1.5rem;
-      max-width: 750px;
-      margin: 0 auto;
-    }
+  .badge {
+    background: var(--accent-glow);
+    color: var(--accent-color);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 0.3rem 0.85rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
 
-    .hero h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      line-height: 1.2;
-      margin-bottom: 0.5rem;
-      background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+  /* Hero */
+  .hero {
+    text-align: center;
+    padding: 3rem 1rem 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
 
-    .hero p {
-      color: var(--text-muted);
-      font-size: 1.1rem;
-    }
+  .hero h1 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 0.6rem;
+    background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
-    /* Action Controls & Score Bar */
-    .controls-bar {
-      max-width: 1500px;
-      width: 95%;
-      margin: 0.5rem auto 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      background: var(--card-bg);
-      padding: 1rem 1.5rem;
-      border-radius: 12px;
-      border: 1px solid var(--card-border);
-    }
+  .hero p {
+    color: var(--text-muted);
+    font-size: 1.15rem;
+    line-height: 1.7;
+  }
 
-    .btn-grade {
-      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      color: #fff;
-      border: none;
-      padding: 0.7rem 1.5rem;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 15px var(--accent-glow);
-    }
+  /* Controls bar */
+  .controls-bar {
+    max-width: 1700px;
+    width: 95%;
+    margin: 0.75rem auto 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    padding: 1.1rem 1.6rem;
+    border-radius: 14px;
+    border: 1px solid var(--card-border);
+  }
 
-    .btn-grade:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-    }
+  .btn-group { display: flex; gap: 0.75rem; flex-wrap: wrap; }
 
-    .btn-grade:active {
-      transform: translateY(0);
-    }
+  .btn {
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Cairo', sans-serif;
+  }
 
-    .score-box {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
+  .btn-run {
+    background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.25);
+  }
+  .btn-run:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4); }
 
-    .score-badge {
-      font-family: 'Fira Code', monospace;
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--accent-color);
-      background: rgba(16, 185, 129, 0.15);
-      padding: 0.3rem 1rem;
-      border-radius: 8px;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
+  .btn-grade {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px var(--accent-glow);
+  }
+  .btn-grade:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
 
-    .feedback-text {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
+  .btn-reset {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-muted);
+    border: 1px solid var(--card-border);
+  }
+  .btn-reset:hover { color: var(--text-main); border-color: rgba(255,255,255,0.2); }
 
-    /* Editor Container */
-    .editor-container {
-      max-width: 1500px;
-      width: 95%;
-      margin: 0 auto 3rem;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      flex: 1;
-    }
+  .btn:active { transform: translateY(0); }
 
-    @media (max-width: 900px) {
-      .editor-container {
-        grid-template-columns: 1fr;
-      }
-    }
+  .score-box { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
 
-    /* Windows Panels - تم التكبير إلى 650px */
-    .panel {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      display: flex;
-      flex-direction: column;
-      height: 650px;
-      overflow: hidden;
-      transition: border-color 0.3s ease;
-    }
+  .score-badge {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--accent-color);
+    background: rgba(16, 185, 129, 0.15);
+    padding: 0.35rem 1.1rem;
+    border-radius: 10px;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    transition: all 0.3s ease;
+  }
 
-    .panel:focus-within {
-      border-color: rgba(16, 185, 129, 0.4);
-      box-shadow: 0 0 25px var(--accent-glow);
-    }
+  .feedback-text { color: var(--text-muted); font-size: 0.92rem; max-width: 420px; }
 
-    .panel-header {
-      background: rgba(15, 23, 42, 0.8);
-      padding: 0.75rem 1.2rem;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--card-border);
-    }
+  /* Editor container */
+  .editor-container {
+    max-width: 1700px;
+    width: 95%;
+    margin: 0 auto 3rem;
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 1.5rem;
+    flex: 1;
+  }
 
-    .window-dots {
-      display: flex;
-      gap: 6px;
-    }
+  @media (max-width: 1000px) {
+    .editor-container { grid-template-columns: 1fr; }
+  }
 
-    .dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-    .dot-red { background: #ef4444; }
-    .dot-yellow { background: #f59e0b; }
-    .dot-green { background: #10b981; }
+  .panel {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    height: 820px;
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
 
-    .line-counter {
-      font-family: 'Fira Code', monospace;
-      font-size: 0.8rem;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 0.2rem 0.6rem;
-      border-radius: 6px;
-      color: var(--accent-color);
-    }
+  .panel:focus-within { border-color: rgba(16, 185, 129, 0.4); box-shadow: 0 0 25px var(--accent-glow); }
 
-    .line-counter.limit {
-      color: var(--danger-color);
-      background: rgba(239, 68, 68, 0.1);
-    }
+  .panel-header {
+    background: rgba(15, 23, 42, 0.85);
+    padding: 0.8rem 1.2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--card-border);
+    gap: 0.75rem;
+  }
 
-    /* Editor Layout */
-    .editor-wrapper {
-      display: flex;
-      flex: 1;
-      position: relative;
-      background: #090d16;
-    }
+  .window-dots { display: flex; gap: 6px; flex-shrink: 0; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-red { background: #ef4444; }
+  .dot-yellow { background: #f59e0b; }
+  .dot-green { background: #10b981; }
 
-    .line-numbers {
-      padding: 1rem 0.5rem;
-      background: rgba(0, 0, 0, 0.2);
-      color: #475569;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.9rem;
-      text-align: center;
-      user-select: none;
-      line-height: 1.6;
-      min-width: 40px;
-      border-left: 1px solid rgba(255, 255, 255, 0.03);
-    }
+  .line-counter {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.25rem 0.7rem;
+    border-radius: 6px;
+    color: var(--accent-color);
+    flex-shrink: 0;
+  }
+  .line-counter.limit { color: var(--danger-color); background: rgba(239, 68, 68, 0.1); }
 
-    textarea {
-      flex: 1;
-      height: 100%;
-      background: transparent;
-      color: var(--code-color);
-      border: none;
-      padding: 1rem;
-      font-family: 'Fira Code', monospace;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      resize: none;
-      outline: none;
-      direction: ltr;
-      text-align: left;
-      tab-size: 2;
-    }
+  .header-title { display: flex; align-items: center; gap: 0.6rem; flex: 1; min-width: 0; }
 
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      background: #ffffff;
-      border-bottom-left-radius: 12px;
-      border-bottom-right-radius: 12px;
-    }
+  .lang-select {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 0.3rem 0.5rem;
+    cursor: pointer;
+    outline: none;
+    max-width: 160px;
+  }
+  .lang-select:hover { border-color: rgba(16, 185, 129, 0.4); }
+  .lang-select option { background: #0f172a; color: var(--text-main); }
 
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 1.5rem;
-      border-top: 1px solid var(--card-border);
-      color: var(--text-muted);
-      font-size: 0.85rem;
-      background: rgba(11, 15, 25, 0.8);
-    }
-  </style>
+  .lang-notice {
+    background: rgba(245, 158, 11, 0.1);
+    border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+    color: var(--warn-color);
+    font-size: 0.78rem;
+    line-height: 1.6;
+    padding: 0.6rem 1.2rem;
+  }
+  .lang-notice b { color: #fbbf24; }
+
+  /* Editor layout */
+  .editor-wrapper {
+    display: flex;
+    flex: 1;
+    position: relative;
+    background: #090d16;
+    overflow: hidden;
+  }
+
+  .line-numbers {
+    padding: 1rem 0.6rem;
+    background: rgba(0, 0, 0, 0.2);
+    color: #475569;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    text-align: center;
+    user-select: none;
+    line-height: 1.6;
+    min-width: 46px;
+    border-left: 1px solid rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+  }
+
+  textarea {
+    flex: 1;
+    height: 100%;
+    background: transparent;
+    color: var(--code-color);
+    border: none;
+    padding: 1rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    resize: none;
+    outline: none;
+    direction: ltr;
+    text-align: left;
+    tab-size: 2;
+  }
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #ffffff;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    border-top: 1px solid var(--card-border);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    background: rgba(11, 15, 25, 0.8);
+  }
+</style>
 </head>
 <body>
 
-  <header>
-    <div class="logo"><span>&lt;/&gt;</span> CodeCraft</div>
-    <div class="badge">تحدي الـ 50 سطرًا</div>
-  </header>
+<header>
+  <div class="logo"><span>&lt;/&gt;</span> CodeCraft</div>
+  <div class="badge">تحدي الـ 50 سطرًا</div>
+</header>
 
-  <section class="hero">
-    <h1>ابنِ أفكارك واختبر درجتك</h1>
-    <p>اكتب كود HTML & CSS واضغط على زر التصحيح للتقييم الفوري والحصول على درجتك من 100 إلى 0.</p>
-  </section>
+<section class="hero">
+  <h1>ابنِ أفكارك واختبر درجتك</h1>
+  <p>اختر لغة البرمجة من القائمة، اكتب كودك، شغّله مباشرة (للغات الويب)، واضغط "تصحيح" للحصول على درجتك من 100 إلى 0.</p>
+</section>
 
-  <!-- شريط التصحيح والتقييم -->
-  <div class="controls-bar">
-    <button class="btn-grade" onclick="evaluateCode()">تصحيح وتقييم الكود 🎯</button>
-    <div class="score-box">
-      <span class="feedback-text" id="feedbackText">اضغط "تصحيح" للتقييم</span>
-      <div class="score-badge" id="scoreDisplay">100 / 100</div>
-    </div>
-  </div>
+<div class="controls-bar">
+  <div class="btn-group">
+    <button class="btn btn-run" onclick="runCode()">تشغيل الكود ▶</button>
+    <button class="btn btn-grade" onclick="evaluateCode()">تصحيح وتقييم 🎯</button>
+    <button class="btn btn-reset" onclick="resetCode()">إعادة تعيين ↺</button>
+  </div>
+  <div class="score-box">
+    <span class="feedback-text" id="feedbackText">اضغط "تصحيح" للتقييم</span>
+    <div class="score-badge" id="scoreDisplay">— / 100</div>
+  </div>
+</div>
 
-  <main class="editor-container">
-    <!-- نافذة كتابة الكود -->
-    <div class="panel">
-      <div class="panel-header">
-        <div class="window-dots">
-          <span class="dot dot-red"></span>
-          <span class="dot dot-yellow"></span>
-          <span class="dot dot-green"></span>
-        </div>
-        <span>محرر الكود (index.html)</span>
-        <span id="lineCount" class="line-counter">0 / 50</span>
-      </div>
-      <div class="editor-wrapper">
-        <div id="lineNumbers" class="line-numbers">1</div>
-        <textarea id="codeEditor" spellcheck="false"><style>
-  body {
-    background: #0f172a;
-    color: #fff;
-    font-family: sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
-  .card {
-    background: #1e293b;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    text-align: center;
-    border: 1px solid #334155;
-  }
-  h2 { color: #10b981; margin-bottom: 0.5rem; }
-</style>
+<main class="editor-container">
+  <div class="panel">
+    <div class="panel-header">
+      <div class="window-dots">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+      </div>
+      <div class="header-title">
+        <span>محرر الكود</span>
+        <select id="langSelect" class="lang-select">
+          <optgroup label="لغات الويب">
+            <option value="html" selected>HTML</option>
+            <option value="css">CSS</option>
+            <option value="javascript">JavaScript</option>
+            <option value="typescript">TypeScript</option>
+          </optgroup>
+          <optgroup label="لغات عامة / خلفية">
+            <option value="python">Python</option>
+            <option value="java">Java</option>
+            <option value="c">C</option>
+            <option value="cpp">C++</option>
+            <option value="csharp">C#</option>
+            <option value="php">PHP</option>
+            <option value="ruby">Ruby</option>
+            <option value="go">Go</option>
+            <option value="rust">Rust</option>
+            <option value="kotlin">Kotlin</option>
+            <option value="swift">Swift</option>
+          </optgroup>
+          <optgroup label="بيانات وضبط">
+            <option value="sql">SQL</option>
+            <option value="json">JSON</option>
+            <option value="xml">XML</option>
+            <option value="yaml">YAML</option>
+            <option value="markdown">Markdown</option>
+            <option value="bash">Bash / Shell</option>
+          </optgroup>
+        </select>
+      </div>
+      <span id="lineCount" class="line-counter">0 / 50</span>
+    </div>
+    <div id="langNotice" class="lang-notice" hidden>
+      ⚠️ المعاينة الحية تعمل فقط مع HTML وCSS وJavaScript لأنها اللغات التي يفهمها المتصفح مباشرة. الكود بلغة <b id="langNoticeName"></b> سيُحفظ ويُصحَّح، لكن بدون تنفيذ فعلي داخل المتصفح.
+    </div>
 
-<div class="card">
-  <h2>CodeCraft Sandbox</h2>
-  <p>عدّل الكود لتشاهد النتيجة مباشرة 🚀</p>
-</div></textarea>
-      </div>
-    </div>
+    <div class="editor-wrapper">
+      <div class="line-numbers" id="lineNumbers">1</div>
+      <textarea id="codeEditor" spellcheck="false">&lt;style&gt;
+  body {
+    background: #0f172a;
+    color: #fff;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .card {
+    background: #1e293b;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    text-align: center;
+    border: 1px solid #334155;
+  }
+  h2 { color: #10b981; margin-bottom: 0.5rem; }
+  button {
+    margin-top: 1rem;
+    background: #10b981;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95rem;
+  }
+  button:hover { background: #059669; }
+&lt;/style&gt;
 
-    <!-- نافذة العرض المباشر (التي تم تكبيرها) -->
-    <div class="panel">
-      <div class="panel-header">
-        <div class="window-dots">
-          <span class="dot dot-red"></span>
-          <span class="dot dot-yellow"></span>
-          <span class="dot dot-green"></span>
-        </div>
-        <span>النتيجة الحية (Live View)</span>
-        <span style="font-size:0.75rem; color:#64748b;">تحديث تلقائي</span>
-      </div>
-      <iframe id="preview"></iframe>
-    </div>
-  </main>
+&lt;div class="card"&gt;
+  &lt;h2&gt;CodeCraft Sandbox&lt;/h2&gt;
+  &lt;p&gt;عدّل الكود لتشاهد النتيجة مباشرة 🚀&lt;/p&gt;
+  &lt;button id="magicBtn"&gt;اضغط هنا&lt;/button&gt;
+&lt;/div&gt;
 
-  <footer>
-    &copy; 2026 CodeCraft Sandbox - جميع الحقوق محفوظة
-  </footer>
+&lt;script&gt;
+  document.getElementById('magicBtn').addEventListener('click', () =&gt; {
+    alert('يعمل جافاسكريبت بنجاح! 🎉');
+  });
+&lt;/script&gt;</textarea>
+    </div>
+  </div>
 
-  <script>
-    const codeEditor = document.getElementById('codeEditor');
-    const preview = document.getElementById('preview');
-    const lineCount = document.getElementById('lineCount');
-    const lineNumbers = document.getElementById('lineNumbers');
-    const scoreDisplay = document.getElementById('scoreDisplay');
-    const feedbackText = document.getElementById('feedbackText');
-    const maxLines = 50;
+  <div class="panel">
+    <div class="panel-header">
+      <div class="window-dots">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+      </div>
+      <span>النتيجة الحية (Live View)</span>
+      <span style="font-size:0.75rem; color:#64748b;">تحديث تلقائي</span>
+    </div>
+    <iframe id="preview"></iframe>
+  </div>
+</main>
 
-    // استرجاع الدرجة المحفوظة سابقاً من LocalStorage
-    const savedScore = localStorage.getItem('codeCraftScore');
-    const savedFeedback = localStorage.getItem('codeCraftFeedback');
-    if (savedScore !== null) {
-      scoreDisplay.textContent = `${savedScore} / 100`;
-      feedbackText.textContent = savedFeedback || '';
-    }
+<footer>
+  &copy; 2026 CodeCraft Sandbox - جميع الحقوق محفوظة
+</footer>
 
-    function updateEditor() {
-      const code = codeEditor.value;
-      
-      // تحديث العرض في الـ iframe
-      const previewDoc = preview.contentDocument || preview.contentWindow.document;
-      previewDoc.open();
-      previewDoc.write(code);
-      previewDoc.close();
+<script>
+  const codeEditor = document.getElementById('codeEditor');
+  const lineNumbers = document.getElementById('lineNumbers');
+  const preview = document.getElementById('preview');
+  const lineCount = document.getElementById('lineCount');
+  const scoreDisplay = document.getElementById('scoreDisplay');
+  const feedbackText = document.getElementById('feedbackText');
+  const maxLines = 50;
 
-      // حساب وتحديث الأسطر
-      const lines = code.split('\n');
-      const totalLines = lines.length;
+  // القيمة الافتراضية (تُستخدم عند إعادة التعيين، بلا أي تخزين محلي)
+  const defaultCode = codeEditor.value;
 
-      // تحديث شريط أرقام الأسطر
-      lineNumbers.innerHTML = Array.from({ length: totalLines }, (_, i) => i + 1).join('<br>');
+  function updateLineNumbers() {
+    const totalLines = codeEditor.value.split('\n').length;
+    lineNumbers.innerHTML = Array.from({ length: totalLines }, (_, i) => i + 1).join('<br>');
+    lineCount.textContent = `${totalLines} / ${maxLines}`;
+    lineCount.classList.toggle('limit', totalLines > maxLines);
+  }
 
-      // تحديث عداد الأسطر
-      lineCount.textContent = `${totalLines} / ${maxLines}`;
+  function runCode() {
+    const previewDoc = preview.contentDocument || preview.contentWindow.document;
+    previewDoc.open();
+    previewDoc.write(codeEditor.value);
+    previewDoc.close();
+  }
 
-      if (totalLines > maxLines) {
-        lineCount.classList.add('limit');
-      } else {
-        lineCount.classList.remove('limit');
-      }
-    }
+  function resetCode() {
+    codeEditor.value = defaultCode;
+    updateLineNumbers();
+    scoreDisplay.textContent = '— / 100';
+    feedbackText.textContent = 'اضغط "تصحيح" للتقييم';
+    runCode();
+  }
 
-    // دالة التصحيح بنظام الخصم من 100 إلى 0
-    function evaluateCode() {
-      const code = codeEditor.value.trim();
-      const lines = code.split('\n').length;
-      let score = 100;
-      let deductions = [];
+  function evaluateCode() {
+    const code = codeEditor.value.trim();
+    const totalLines = codeEditor.value.split('\n').length;
 
-      if (code.length === 0) {
-        score = 0;
-        scoreDisplay.textContent = "0 / 100";
-        feedbackText.textContent = "الكود فارغ! تم خصم 100 نقطة.";
-        localStorage.setItem('codeCraftScore', 0);
-        localStorage.setItem('codeCraftFeedback', "الكود فارغ!");
-        return;
-      }
+    if (code.length === 0) {
+      scoreDisplay.textContent = '0 / 100';
+      feedbackText.textContent = 'الكود فارغ! تم خصم 100 نقطة.';
+      return;
+    }
 
-      // 1. خصم نقطتين عن كل سطر زائد عن الـ 50 سطرًا
-      if (lines > maxLines) {
-        const extraLines = lines - maxLines;
-        const penalty = extraLines * 2;
-        score -= penalty;
-        deductions.push(`تجاوز الأسطر (${extraLines} أسطر زوائد = -${penalty})`);
-      }
+    let score = 100;
+    let deductions = [];
 
-      // 2. خصم 40 نقطة إذا لم توجد وسوم HTML هيكلية
-      if (!/<(div|h1|h2|h3|p|button|span|section|header|footer)/i.test(code)) {
-        score -= 40;
-        deductions.push("غياب عناصر HTML الهيكلية (-40)");
-      }
+    // 1) خصم نقطتين عن كل سطر زائد عن الحد الأقصى
+    if (totalLines > maxLines) {
+      const extraLines = totalLines - maxLines;
+      const penalty = extraLines * 2;
+      score -= penalty;
+      deductions.push(`تجاوز الأسطر (${extraLines} سطرًا زائدًا = -${penalty})`);
+    }
 
-      // 3. خصم 30 نقطة إذا لم توجد تنسيقات CSS
-      if (!/<style/i.test(code) && !/style=/i.test(code)) {
-        score -= 30;
-        deductions.push("غياب تنسيقات CSS (-30)");
-      }
+    // 2) خصم 40 نقطة إذا لم توجد وسوم HTML هيكلية
+    if (!/<(div|h1|h2|h3|p|button|span|section|header|footer)/i.test(code)) {
+      score -= 40;
+      deductions.push('غياب عناصر HTML الهيكلية (-40)');
+    }
 
-      if (score < 0) {
-        score = 0;
-      }
+    // 3) خصم 30 نقطة إذا لم توجد تنسيقات CSS
+    if (!/<style/i.test(code) && !/style=/i.test(code)) {
+      score -= 30;
+      deductions.push('غياب تنسيقات CSS (-30)');
+    }
 
-      scoreDisplay.textContent = `${score} / 100`;
-      
-      let finalFeedback = "";
-      if (score === 100) {
-        finalFeedback = "ممتاز! حصلت على العلامة الكاملة (100/100) 🎯";
-      } else {
-        finalFeedback = "الخصومات: " + deductions.join(' | ');
-      }
-      
-      feedbackText.textContent = finalFeedback;
+    if (score < 0) score = 0;
 
-      localStorage.setItem('codeCraftScore', score);
-      localStorage.setItem('codeCraftFeedback', finalFeedback);
-    }
+    scoreDisplay.textContent = `${score} / 100`;
 
-    // مزامنة التمرير
-    codeEditor.addEventListener('scroll', () => {
-      lineNumbers.scrollTop = codeEditor.scrollTop;
-    });
+    let finalFeedback;
+    if (score === 100) {
+      finalFeedback = 'ممتاز! حصلت على العلامة الكاملة (100/100) 🎯';
+    } else {
+      finalFeedback = 'الخصومات: ' + deductions.join(' | ');
+    }
+    feedbackText.textContent = finalFeedback;
+  }
 
-    codeEditor.addEventListener('input', updateEditor);
-    updateEditor();
-  </script>
+  codeEditor.addEventListener('scroll', () => {
+    lineNumbers.scrollTop = codeEditor.scrollTop;
+  });
+  codeEditor.addEventListener('input', () => {
+    updateLineNumbers();
+    runCode();
+  });
+
+  updateLineNumbers();
+  runCode();
+</script>
 
 </body>
 </html>
